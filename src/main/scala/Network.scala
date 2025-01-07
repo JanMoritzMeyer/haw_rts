@@ -17,7 +17,7 @@ class Network (nodes: List[Node], connections: List[Connection]) {
     
     EventController.getSortedEvents
       .filter(time == _.endTime)
-      .map(_.end())
+      .foreach(_.triggerCallback())
     
     nodes
       .foreach(_.prepareTick(tick))

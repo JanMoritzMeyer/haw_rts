@@ -5,6 +5,8 @@ case class Host(name: String, queue: Queue) extends Node {
   var clock: Long = 0
   
   var trafficSources: List[TrafficSource] = List.empty
+
+  var sending = false
   
   def addTrafficSource(trafficSource: TrafficSource): Unit = {
     this.trafficSources = this.trafficSources :+ trafficSource
@@ -12,12 +14,18 @@ case class Host(name: String, queue: Queue) extends Node {
   
   override def getQueue: Queue = queue
 
-  override def tick(tick: Long, isAvailable: (lnode: Node, rnode: Node) => Option[Connection]): Unit = {
+  override def tick(tick: Long, isAvailable: ((lnode: Node, rnode: Node) => Option[Connection])): Unit = {
     
     clock = clock + tick
     
-    if (getQueue.isEmpty) {
+    if (sending) {
+      
+    }
+    else if (getQueue.isEmpty && !sending) {
       queue.notSending()
+    }
+    else if (!sending && !queue.canSend()) {
+      queue.blocked(tick)
     }
     else {
       queue.getQueue.foreach(packet => {
@@ -27,7 +35,9 @@ case class Host(name: String, queue: Queue) extends Node {
             connection.addPackage(packet)
             val timeToSend = packet.size / connection.speed
             val finished = clock + timeToSend
-            EventController.addEvent(Event(connection, packet, finished))
+            sending = true
+            EventController.addEvent(Event(() => connection.removePackage(packet), finished))
+            EventController.addEvent(Event(() => sending = false, finished))
             queue.sending(timeToSend)
           }
           case None => queue.blocked(tick)

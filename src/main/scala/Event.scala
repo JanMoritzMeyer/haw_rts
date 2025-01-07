@@ -1,8 +1,7 @@
-case class Event(connection: Connection, packet: Packet, endTime: Long) {
+case class Event(callback: () => Unit, endTime: Long) {
   
-  def end() = {
-    Console.println("Package removed")
-    connection.removePackage(packet)
+  def triggerCallback(): Unit = {
+    callback()
   }
   
 }

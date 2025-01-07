@@ -22,5 +22,6 @@ class Queue (prioritizer: Gate) {
 
   def notSending(): Unit = prioritizer.notSending()
   
+  def canSend(): Boolean = prioritizer.canSend
 
 }

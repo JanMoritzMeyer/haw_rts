@@ -15,6 +15,7 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: I
   }
   
   def removePackage(packet: Packet): Any = {
+    Console.println(s"successfully sent package to ${packet.target.name} with pcp ${packet.pcp}")
     queue.removePacket(packet)
   }
 

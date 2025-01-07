@@ -1,7 +1,7 @@
 package control
 
 class OpenGate extends Gate {
-  override def getPriority: Double = 0.0
+  override def canSend: Boolean = true
 
   override def sending(ns: Double): Unit = {}
 
