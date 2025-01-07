@@ -2,7 +2,6 @@ import control.Gate
 
 case class Host(name: String, queue: Queue) extends Node {
 
-  var clock: Long = 0
   
   var trafficSources: List[TrafficSource] = List.empty
 
@@ -14,10 +13,7 @@ case class Host(name: String, queue: Queue) extends Node {
   
   override def getQueue: Queue = queue
 
-  override def tick(tick: Long, isAvailable: ((lnode: Node, rnode: Node) => Option[Connection])): Unit = {
-    
-    clock = clock + tick
-    
+  override def tick(tick: Long, time: Long, isAvailable: ((lnode: Node, rnode: Node) => Option[Connection])): Unit = {
     if (sending) {
       
     }
@@ -34,7 +30,7 @@ case class Host(name: String, queue: Queue) extends Node {
             queue.removePacket(packet)
             connection.addPackage(packet)
             val timeToSend = packet.size / connection.speed
-            val finished = clock + timeToSend
+            val finished = time + timeToSend
             sending = true
             EventController.addEvent(Event(() => connection.removePackage(packet), finished))
             EventController.addEvent(Event(() => sending = false, finished))

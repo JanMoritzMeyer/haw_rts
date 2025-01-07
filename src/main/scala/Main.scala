@@ -15,13 +15,16 @@ object Main {
 
     val node1 = Host("ho1", Queue(CBS(100, 100)))
     val node2 = Host("ho2", Queue(CBS(100, 100)))
+    val switch1 = Switch("s1")
     
     node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame, node2))
     node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, node2))
+    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, switch1))
 
     val connection = Connection(node1, 0, node2, 0, 100)
-    
-    val network = Network(List(node1, node2), List(connection))
+    val connection2 = Connection(node1, 0, switch1, 1, 100)
+
+    val network = Network(List(node1, node2, switch1), List(connection, connection2))
 
     while (endTime > clock) {
       network.tick(1, clock)

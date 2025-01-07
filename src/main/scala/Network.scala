@@ -23,7 +23,7 @@ class Network (nodes: List[Node], connections: List[Connection]) {
       .foreach(_.prepareTick(tick, time))
     
     nodes
-      .foreach(_.tick(tick, checkAvailability))
+      .foreach(_.tick(tick, time, checkAvailability))
     
   }
 }
