@@ -10,7 +10,7 @@ case class Switch(name: String) extends Node {
     
   }
 
-  override def prepareTick(tick: Long): Unit = {
+  override def prepareTick(tick: Long, time: Long): Unit = {
     
   }
 }

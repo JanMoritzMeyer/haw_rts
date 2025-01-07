@@ -16,8 +16,8 @@ object Main {
     val node1 = Host("ho1", Queue(CBS(100, 100)))
     val node2 = Host("ho2", Queue(CBS(100, 100)))
     
-    node1.addTrafficSource(TrafficSource(0, 100, 20, frame, node2))
-    node1.addTrafficSource(TrafficSource(0, 100, 20, frame2, node2))
+    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame, node2))
+    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, node2))
 
     val connection = Connection(node1, 0, node2, 0, 100)
     

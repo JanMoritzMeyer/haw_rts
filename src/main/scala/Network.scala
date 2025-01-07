@@ -20,7 +20,7 @@ class Network (nodes: List[Node], connections: List[Connection]) {
       .foreach(_.triggerCallback())
     
     nodes
-      .foreach(_.prepareTick(tick))
+      .foreach(_.prepareTick(tick, time))
     
     nodes
       .foreach(_.tick(tick, checkAvailability))
