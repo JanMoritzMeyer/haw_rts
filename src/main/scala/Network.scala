@@ -17,31 +17,42 @@ class Network (nodes: List[Node], connections: List[Connection]) {
     .flatMap(c => List((c.lnode -> c.rnode), (c.rnode, c.lnode)))
     .groupMap(_._1)(_._2)
 
-  def getRoutesFor(node: Node, startPoint: Node): List[Node] = simpleConnections
+  /*
+  this function returns all nodes that are reachable from the startPoint
+   */
+  def getConnectionsFor(node: Node): List[Node] = getConnectionsForRec(node, List(node))
+
+  def getConnectionsForRec(node: Node, visited: List[Node]): List[Node] = simpleConnections
     .get(node)
     .map(nodes => {
-      nodes ++ nodes
-        .filter(_ != startPoint)
-        .map(getRoutesFor(_, node))
-        .fold(List.empty)((agg, x) => agg.toList ++ x.toList)
+      val filteredNodes: List[Node] = nodes
+        .filter(!visited.contains(_))
+      filteredNodes match
+        case Nil => List.empty
+        case some => some ++ some.flatMap(node => {
+          getConnectionsForRec(node, visited :+ node)
+        })
     })
     .map(_.distinct)
     .getOrElse(List.empty)
 
-  val routingTable: Map[Node, Map[Node,Node]] = nodes
+  val routingTable: Map[Node, Map[Node, Node]] = nodes  // (aktuelle Node, (Ziel Node, Next Hop))
     .map(node => {
-      val possibleConnections = simpleConnections(node)
-      val simpleTable: Map[Node, Node] = possibleConnections.flatMap(p => {
-          val availableNodes = getRoutesFor(p, p)
-            .map(n => n -> p)
-            .toMap
-          availableNodes
+      val possibleConnections = simpleConnections.getOrElse(node, List.empty)
+      val obvConnections = possibleConnections
+        .map(x => (x, x))
+      val pairs = possibleConnections
+        .flatMap(connection => {
+          getConnectionsFor(connection).filter(_ != node).map(reachable => {
+            (reachable, connection)
+          })
         })
         .toMap
-      node -> simpleTable
+      (node -> (pairs ++ obvConnections))
     })
     .toMap
-  
+
+
   Network.routingTable = routingTable
 
 

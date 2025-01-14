@@ -17,8 +17,8 @@ object Main {
     val switch1 = Switch("s1")
     val switch2 = Switch("s2")
 
-    //node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame, node2))
-    //node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, node2))
+    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame, node2))
+    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, node2))
     node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, switch2))
 
     val connection = Connection(node1, 0, node2, 0, 100)
@@ -26,9 +26,7 @@ object Main {
     val connection3 = Connection(switch1, 0, switch2, 1, 100)
 
     val network = Network(List(node1, node2, switch1, switch2), List(connection, connection2, connection3))
-
-    val routes = network.getRoutesFor(node1, node1)
-
+    
     while (endTime > clock) {
       network.tick(1, clock)
       Console.println(clock)
