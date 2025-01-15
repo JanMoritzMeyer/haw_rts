@@ -1,6 +1,6 @@
 case class Packet(
                  size: Double,
                  nextHop: Node,
-                 target: Node,
+                 target: List[Node],
                  pcp: Int
                  )

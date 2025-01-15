@@ -1,0 +1,41 @@
+{
+  "description": "First test network.",
+  "time_unit" : "us",
+  "frame_size_unit" : "byte",
+  "link_speed_unit" : "Mbps",
+  "frame_size_contains" : [ "PAYLOAD", "HEADER", "OVERHEAD", "IFG"],
+
+  "switches": ["sw1", "sw2"],
+  "hosts": ["ho1", "ho2", "ho3"],
+  "connections": [
+    { "l-node" : "ho1", "l-port" : 0, "r-node" : "sw1", "r-port" : 0, "speed" : 100  },
+    { "l-node" : "ho2", "l-port" : 0, "r-node" : "sw1", "r-port" : 1, "speed" : 100  },
+    { "l-node" : "sw1", "l-port" : 2, "r-node" : "sw2", "r-port" : 0, "speed" : 1000 },
+    { "l-node" : "ho3", "l-port" : 0, "r-node" : "sw2", "r-port" : 1, "speed" : 100 }
+  ],
+
+  "traffic_srcs" : [
+    {   "host" : "ho1", "start_time": 0, "end_time" : 1000000,
+      "min_delta" : 10000, "max_delta" : 10010, "distribution" : "uniform",
+      "frame" : { "stream" : "s1", "pcp" : 0, "min_size" : 100, "max_size" : 300, "distribution" : "uniform" }
+    },
+    {   "host" : "ho1", "start_time": 10, "end_time" : 1000000,
+      "min_delta" : 20000, "max_delta" : 20010, "distribution" : "uniform",
+      "frame" : { "stream" : "s2", "pcp" : 1, "min_size" : 100, "max_size" : 1000, "distribution" : "uniform" }
+    },
+    {   "host" : "ho2", "start_time": 4, "end_time" : 1000000,
+      "min_delta" : 10000, "max_delta" : 10010, "distribution" : "uniform",
+      "frame" : { "stream" : "s3", "pcp" : 3, "min_size" : 150, "max_size" : 1000, "distribution" : "uniform" }
+    }
+  ],
+
+  "traffic_sinks" : [
+    {   "host" : "ho3", "stream": "s1" },
+    {   "host" : "ho3", "stream": "s2" },
+    {   "host" : "ho3", "stream": "s3" },
+    {   "host" : "ho2", "stream": "s1" },
+    {   "host" : "ho2", "stream": "s2" }
+  ],
+
+  "route_entries" : [{ "stream": "s1" ,"node" : "ho3", "out_port" : 0 }]
+}
