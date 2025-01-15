@@ -64,7 +64,7 @@ class Network (nodes: List[Node], connections: List[Connection]) {
 
     EventController.getSortedEvents
       .filter(!_.isDone)
-      .filter(x => (time >= x.endTime && (time-1) < x.endTime))
+      .filter(_.endTime == time)
       .foreach(_.triggerCallback())
     
     nodes

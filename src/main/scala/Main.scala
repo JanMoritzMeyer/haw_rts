@@ -22,8 +22,8 @@ import scala.language.postfixOps
     val network = Network(List(node1, node2, switch1), List(connection, connection2))
     
     while (endTime > clock) {
+      GlobalTime.time = clock
       network.tick(1, clock)
-      Console.println(clock)
       clock = clock + 1
     }
 

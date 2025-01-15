@@ -16,6 +16,7 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: D
   }
   
   def removePackage(packet: Packet): Any = {
+    Logging.writePackageLog(packet.nextHop, packet)
     val nextHops = packet.target.filter(packet.nextHop != _).map(t => Network.routingTable(packet.nextHop)(t))
     val sameNextHop = nextHops.forall(_ == nextHops.head)
     if (sameNextHop) {
