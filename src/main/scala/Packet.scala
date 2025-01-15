@@ -1,5 +1,5 @@
 case class Packet(
-                 size: Long,
+                 size: Double,
                  nextHop: Node,
                  target: Node,
                  pcp: Int

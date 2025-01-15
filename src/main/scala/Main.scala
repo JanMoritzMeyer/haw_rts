@@ -1,31 +1,25 @@
-import control.CBS
+import control.{CBS, OpenGate}
 
 import scala.language.postfixOps
 
-object Main {
-
   @main def main (): Unit = {
 
+    // Time: MS * 1000 -> NS
     var clock: Int = 0
-    val endTime: Int = 100
+    val endTime: Double = Converter.ms_to_ns(1_000)
 
-    val frame = Frame("s1", 0, 100, 300)
-    val frame2 = Frame("s1", 1, 100, 300)
+    val frame = Frame("s1", 0, 117, 117)
 
-    val node1 = Host("ho1", Queue(CBS(100, 100)))
-    val node2 = Host("ho2", Queue(CBS(100, 100)))
+    val node1 = Host("ho1", Queue(OpenGate()))
+    val node2 = Host("ho2", Queue(OpenGate()))
     val switch1 = Switch("s1")
-    val switch2 = Switch("s2")
 
-    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame, node2))
-    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, node2))
-    node1.addTrafficSource(TrafficSource(0, 100, 20, 25, frame2, switch2))
+    node1.addTrafficSource(TrafficSource(Converter.ms_to_ns(5), Converter.ms_to_ns(1_000), Converter.ms_to_ns(10), Converter.ms_to_ns(10), frame, node2))
 
-    val connection = Connection(node1, 0, node2, 0, 100)
-    val connection2 = Connection(node1, 0, switch1, 1, 100)
-    val connection3 = Connection(switch1, 0, switch2, 1, 100)
+    val connection = Connection(node1, 0, switch1, 0, Converter.mbits_to_bytens(100))
+    val connection2 = Connection(switch1, 0, node2, 1, Converter.mbits_to_bytens(100))
 
-    val network = Network(List(node1, node2, switch1, switch2), List(connection, connection2, connection3))
+    val network = Network(List(node1, node2, switch1), List(connection, connection2))
     
     while (endTime > clock) {
       network.tick(1, clock)
@@ -33,5 +27,5 @@ object Main {
       clock = clock + 1
     }
 
-  }
+
 }

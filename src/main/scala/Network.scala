@@ -57,9 +57,14 @@ class Network (nodes: List[Node], connections: List[Connection]) {
 
 
   def tick(tick: Long, time: Int): Unit = {
-    
+
+    if (time == 14360) {
+      Console.println("blub")
+    }
+
     EventController.getSortedEvents
-      .filter(time == _.endTime)
+      .filter(!_.isDone)
+      .filter(x => (time >= x.endTime && (time-1) < x.endTime))
       .foreach(_.triggerCallback())
     
     nodes

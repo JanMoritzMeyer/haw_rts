@@ -1,6 +1,6 @@
 import control.{Gate, OpenGate}
 
-case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: Int){
+case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: Double){
 
   var queue: Queue = Queue(OpenGate())
 
@@ -19,6 +19,8 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: I
     if (packet.nextHop != packet.target) {
       val nextHop = Network.routingTable(packet.nextHop)(packet.target)
       packet.nextHop.addToQueue(Packet(packet.size, nextHop, packet.target, packet.pcp))
+    } else {
+      Console.println("package arrived!!!")
     }
     Console.println(s"successfully sent package with target ${packet.target.name} to ${packet.nextHop.name} with pcp ${packet.pcp}")
     queue.removePacket(packet)

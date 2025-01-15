@@ -8,6 +8,6 @@ object EventController {
     events = (events :+ event)
   }
   
-  def getSortedEvents = events.sortBy(_.endTime)
+  def getSortedEvents: List[Event] = events.sortBy(_.endTime)
 
 }

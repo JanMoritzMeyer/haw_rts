@@ -1,5 +1,12 @@
 import scala.util.Random
 
-case class Frame(stream: String, pcp: Int, minsize: Int, maxsize: Int) {
-  def getSize: Int = Random.between(minsize, maxsize)
+case class Frame(stream: String, pcp: Int, minsize: Double, maxsize: Double) {
+  def getSize(): Double = {
+    if (minsize.equals(maxsize)) {
+      minsize
+    }
+    else {
+      Random.between(minsize, maxsize)
+    }
+  }
 }
