@@ -5,6 +5,9 @@ case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_ma
   var nextSend: Double = start
 
   def getAvailableFrame(time: Long, node: Node): Option[Packet] = {
+    if (time > end) {
+      return None
+    }
     if (time == nextSend) {
       val nextHops = target.map(t => Network.routingTable(node)(t))
       if (delta_min.equals(delta_max)) {
@@ -12,7 +15,7 @@ case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_ma
       } else {
         nextSend = nextSend + Random.between(delta_min, delta_max)
       }
-      return Some(Packet(frame.getSize(), nextHops.head, target, frame.pcp))
+      return Some(Packet(frame.getSize(), nextHops.head, target, frame.pcp, frame.stream))
     }
     None
   }

@@ -58,10 +58,6 @@ class Network (nodes: List[Node], connections: List[Connection]) {
 
   def tick(tick: Long, time: Int): Unit = {
 
-    if (time == 14360) {
-      Console.println("blub")
-    }
-
     EventController.getSortedEvents
       .filter(!_.isDone)
       .filter(_.endTime == time)
