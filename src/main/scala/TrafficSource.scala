@@ -1,3 +1,5 @@
+import UID.getUnique
+
 import scala.util.Random
 
 case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_max: Double, frame: Frame, target: List[Node]) {
@@ -15,7 +17,7 @@ case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_ma
       } else {
         nextSend = nextSend + Random.between(delta_min, delta_max)
       }
-      return Some(Packet(frame.getSize(), nextHops.head, target, frame.pcp, frame.stream))
+      return Some(Packet(frame.getSize(), nextHops.head, target, frame.pcp, frame.stream, getUnique))
     }
     None
   }

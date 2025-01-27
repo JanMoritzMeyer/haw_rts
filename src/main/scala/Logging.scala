@@ -4,8 +4,8 @@ object Logging {
 
   def writePackageLog(node: Node, packet: Packet): Unit = {
     new PrintWriter(new FileOutputStream(s"${node.name}_${packet.stream}.txt", true)) {
-      append(s"arrival time ${GlobalTime.time}.0 ns : Frame size ${packet.size} pcp ${packet.pcp} \r\n")
-      close
+      append(s"arrival_time ${GlobalTime.time}.0 ns : Frame(UID:${packet.uid}, stream: ${packet.stream}, pcp: ${packet.pcp}, size: ${packet.size}\r\n")
+      close()
     }
 
   }

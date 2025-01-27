@@ -21,7 +21,7 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: D
     if (sameNextHop) {
       if (packet.nextHop != packet.target.head) {
         val nextHop = Network.routingTable(packet.nextHop)(packet.target.head)
-        packet.nextHop.addToQueue(Packet(packet.size, nextHop, packet.target, packet.pcp, packet.stream))
+        packet.nextHop.addToQueue(Packet(packet.size, nextHop, packet.target, packet.pcp, packet.stream, packet.uid))
       }
       else {
       }
@@ -30,7 +30,7 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: D
     else {
       packet.target.foreach(target => {
         val nextHop = Network.routingTable(packet.nextHop)(target)
-        packet.nextHop.addToQueue(Packet(packet.size, nextHop, List(target), packet.pcp, packet.stream))
+        packet.nextHop.addToQueue(Packet(packet.size, nextHop, List(target), packet.pcp, packet.stream, packet.uid))
         queue.removePacket(packet)
       })
     }

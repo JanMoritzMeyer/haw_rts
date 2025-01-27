@@ -3,5 +3,6 @@ case class Packet(
                  nextHop: Node,
                  target: List[Node],
                  pcp: Int,
-                 stream: String
+                 stream: String,
+                 uid: Int
                  )
