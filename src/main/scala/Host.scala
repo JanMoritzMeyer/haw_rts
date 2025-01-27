@@ -14,14 +14,8 @@ case class Host(name: String, queue: Queue) extends Node {
   override def getQueue: Queue = queue
 
   override def tick(tick: Long, time: Long, isAvailable: ((lnode: Node, rnode: Node) => Option[Connection])): Unit = {
-    if (sending) {
-      
-    }
-    else if (getQueue.isEmpty && !sending) {
-      queue.notSending()
-    }
-    else if (!sending && !queue.canSend()) {
-      queue.blocked(tick)
+    if (getQueue.isEmpty && !sending) {
+      queue.notSending(tick)
     }
     else {
       queue.getQueue.foreach(packet => {
@@ -36,7 +30,7 @@ case class Host(name: String, queue: Queue) extends Node {
             EventController.addEvent(Event(() => sending = false, finished))
             queue.sending(timeToSend)
           }
-          case None => queue.blocked(tick)
+          case None => queue.notSending(tick)
         }
       })
     }

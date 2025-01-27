@@ -18,9 +18,7 @@ class Queue (prioritizer: Gate) {
 
   def sending(ns: Double) = prioritizer.sending(ns)
 
-  def blocked(ns: Double): Unit = prioritizer.blocked(ns)
-
-  def notSending(): Unit = prioritizer.notSending()
+  def notSending(ns: Double): Unit = prioritizer.notSending(ns)
   
   def canSend(): Boolean = prioritizer.canSend
 

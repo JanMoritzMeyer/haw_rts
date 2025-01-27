@@ -5,7 +5,6 @@ class OpenGate extends Gate {
 
   override def sending(ns: Double): Unit = {}
 
-  override def blocked(ns: Double): Unit = {}
+  override def notSending(ns: Double): Unit = {}
 
-  override def notSending(): Unit = {}
 }

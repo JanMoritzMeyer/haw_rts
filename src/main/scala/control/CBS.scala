@@ -8,7 +8,11 @@ case class CBS (idleSlope: Double, sendSlope: Double) extends Gate {
 
   override def sending(ns: Double): Unit = credit = credit - sendSlope * ns
 
-  override def blocked(ns: Double): Unit = credit = credit + idleSlope * ns
-
-  override def notSending(): Unit = credit = 0
+  override def notSending(ns: Double): Unit = credit = {
+    if (canSend) {
+      0.0
+    } else {
+      credit + idleSlope * ns
+    }
+  }
 }
