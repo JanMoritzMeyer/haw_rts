@@ -2,7 +2,7 @@ import control.Gate
 
 class ClassicQueue (prioritizer: Map[Int, Gate]) extends Queue {
 
-  var queue: List[Packet] = List.empty
+  private var queue: List[Packet] = List.empty
 
   def addPacket(packet: Packet): Unit = {
     queue = queue :+ packet
