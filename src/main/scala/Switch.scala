@@ -2,7 +2,7 @@ import control.Gate
 
 case class Switch(name: String, gates: Map[Int, Gate] = Map.empty) extends Node {
 
-  val queue = new Queue(gates)
+  val queue = new ClassicQueue(gates)
 
   var sending = false
   

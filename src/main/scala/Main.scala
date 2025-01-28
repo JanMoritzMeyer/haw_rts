@@ -10,8 +10,8 @@ import scala.language.postfixOps
 
     val s1 = Frame("s1", 0, 500, 500)
 
-    val ho1 = Host("ho1", Queue(Map.empty))
-    val ho2 = Host("ho2", Queue(Map.empty))
+    val ho1 = Host("ho1", ClassicQueue(Map.empty))
+    val ho2 = Host("ho2", ClassicQueue(Map.empty))
     val tas_schedule = Seq(
       (Converter.ms_to_ns(10), true),
       (Converter.ms_to_ns(50), false),
