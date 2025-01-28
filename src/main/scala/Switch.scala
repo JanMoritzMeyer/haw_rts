@@ -2,7 +2,7 @@ import control.OpenGate
 
 case class Switch(name: String) extends Node {
 
-  val queue = new Queue(OpenGate())
+  val queue = new Queue(Map.empty)
 
   var sending = false
   

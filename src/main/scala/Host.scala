@@ -13,12 +13,13 @@ case class Host(name: String, queue: Queue) extends Node {
   
   override def getQueue: Queue = queue
 
-  override def tick(tick: Long, time: Long, isAvailable: ((lnode: Node, rnode: Node) => Option[Connection])): Unit = {
-    if (getQueue.isEmpty && !sending) {
+  override def tick(tick: Long, time: Long, isAvailable: (lnode: Node, rnode: Node) => Option[Connection]): Unit = {
+    val packets = queue.getQueue
+    if (queue.isEmpty && !sending) {
       queue.notSending(tick)
     }
     else {
-      queue.getQueue.foreach(packet => {
+      packets.foreach(packet => {
         isAvailable(this, packet.nextHop) match {
           case Some(connection): Option[Connection] => {
             queue.removePacket(packet)
@@ -28,7 +29,7 @@ case class Host(name: String, queue: Queue) extends Node {
             sending = true
             EventController.addEvent(Event(() => connection.removePackage(packet), finished))
             EventController.addEvent(Event(() => sending = false, finished))
-            queue.sending(timeToSend)
+            queue.sending(timeToSend, packet.pcp)
           }
           case None => queue.notSending(tick)
         }

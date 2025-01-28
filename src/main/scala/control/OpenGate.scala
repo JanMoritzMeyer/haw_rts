@@ -7,4 +7,7 @@ class OpenGate extends Gate {
 
   override def notSending(ns: Double): Unit = {}
 
+  override def reset(): Unit = {
+    
+  }
 }

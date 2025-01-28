@@ -2,7 +2,7 @@ import control.{Gate, OpenGate}
 
 case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: Double){
 
-  var queue: Queue = Queue(OpenGate())
+  var queue: Queue = Queue(Map.empty)
 
   def isAvailable: Boolean = queue.isEmpty
 

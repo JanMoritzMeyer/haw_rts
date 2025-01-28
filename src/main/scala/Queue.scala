@@ -1,6 +1,6 @@
 import control.Gate
 
-class Queue (prioritizer: Gate) {
+class Queue (prioritizer: Map[Int, Gate]) {
   
   var queue: List[Packet] = List.empty
   
@@ -14,12 +14,29 @@ class Queue (prioritizer: Gate) {
   
   def isEmpty: Boolean = queue.isEmpty
   
-  def getQueue: List[Packet] = queue.sortBy(_.pcp)
-
-  def sending(ns: Double) = prioritizer.sending(ns)
-
-  def notSending(ns: Double): Unit = prioritizer.notSending(ns)
+  def getQueue: List[Packet] = {
+    val availablePrios = queue
+      .groupBy(_.pcp).keys
+      .toList
+    prioritizer
+      .foreach(x => {
+        val (prio, gate) = x
+        if (!availablePrios.contains(prio)) {
+          gate.reset()
+        }
+      })
+    queue
+      .filter(x => canSend(x.pcp))
+      .sortBy(_.pcp)
+  }
   
-  def canSend(): Boolean = prioritizer.canSend
+  def sending(ns: Double, pcp: Int): Unit = {
+    prioritizer.get(pcp).foreach(_.sending(ns))
+    prioritizer.filter(_._1 != pcp).foreach(_._2.notSending(ns))
+  }
+
+  def notSending(ns: Double): Unit = prioritizer.foreach(_._2.notSending(ns))
+
+  def canSend(pcp: Int): Boolean = prioritizer.get(pcp).forall(_.canSend)
 
 }

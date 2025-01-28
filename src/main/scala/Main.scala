@@ -10,8 +10,8 @@ import scala.language.postfixOps
 
     val s1 = Frame("s1", 0, 500, 500)
 
-    val ho1 = Host("ho1", Queue(CBS(32, 68)))
-    val ho2 = Host("ho2", Queue(OpenGate()))
+    val ho1 = Host("ho1", Queue(Map(0 -> CBS(32, 68))))
+    val ho2 = Host("ho2", Queue(Map.empty))
     val sw1 = Switch("sw1")
 
     ho1.addTrafficSource(TrafficSource(Converter.ms_to_ns(5), Converter.ms_to_ns(1_000), Converter.ms_to_ns(125), Converter.ms_to_ns(125), s1, List(ho2)))
