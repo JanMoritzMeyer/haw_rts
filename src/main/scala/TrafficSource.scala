@@ -11,7 +11,7 @@ case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_ma
       return None
     }
     if (time == nextSend) {
-      val nextHops = target.map(t => Network.routingTable(node)(t))
+      val nextHops = target.flatMap(t => Network.routingTable(node)(t))
       if (delta_min.equals(delta_max)) {
         nextSend = nextSend + delta_min
       } else {

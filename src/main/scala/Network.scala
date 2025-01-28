@@ -3,7 +3,7 @@ class Network (nodes: List[Node], connections: List[Connection]) {
   val indexedConnections: Map[(Node, Node), Connection] = {
     connections
       .flatMap(connection => {
-        List((connection.lnode, connection.rnode) -> connection, (connection.rnode, connection.lnode) -> connection)
+        List((connection.lnode, connection.rnode) -> connection)
       })
       .toMap
   }
@@ -14,47 +14,36 @@ class Network (nodes: List[Node], connections: List[Connection]) {
   }
 
   val simpleConnections: Map[Node, List[Node]] = connections
-    .flatMap(c => List((c.lnode -> c.rnode), (c.rnode, c.lnode)))
+    .flatMap(c => List(c.lnode -> c.rnode))
     .groupMap(_._1)(_._2)
 
-  /*
-  this function returns all nodes that are reachable from the startPoint
-   */
-  def getConnectionsFor(node: Node): List[Node] = getConnectionsForRec(node, List(node))
+  def getAllConnectionsFor(node: Node, exclude: Seq[Node] = Seq.empty): Seq[Node] = {
+    val found = simpleConnections
+      .getOrElse(node, Seq.empty)
+      .filterNot(exclude.contains(_))
+    (found ++ found.flatMap(getAllConnectionsFor(_, exclude :+ node)))
+      .distinct
+      .sortBy(_.name)
+  }
 
-  def getConnectionsForRec(node: Node, visited: List[Node]): List[Node] = simpleConnections
-    .get(node)
-    .map(nodes => {
-      val filteredNodes: List[Node] = nodes
-        .filter(!visited.contains(_))
-      filteredNodes match
-        case Nil => List.empty
-        case some => some ++ some.flatMap(node => {
-          getConnectionsForRec(node, visited :+ node)
-        })
-    })
-    .map(_.distinct)
-    .getOrElse(List.empty)
-
-  val routingTable: Map[Node, Map[Node, Node]] = nodes  // (aktuelle Node, (Ziel Node, Next Hop))
-    .map(node => {
-      val possibleConnections = simpleConnections.getOrElse(node, List.empty)
-      val obvConnections = possibleConnections
-        .map(x => (x, x))
-      val pairs = possibleConnections
-        .flatMap(connection => {
-          getConnectionsFor(connection).filter(_ != node).map(reachable => {
-            (reachable, connection)
+  def createRoutingTable: Map[Node, Map[Node, Seq[Node]]] = {
+    nodes
+      .map(node => {
+        node -> simpleConnections
+          .getOrElse(node, List.empty)
+          .map(c => c -> (getAllConnectionsFor(c, Seq(node)) :+ c))
+          .flatMap(pair => {
+            val (start, reachable) = pair
+            reachable
+              .map(r => (r, start))
+              .toList
           })
-        })
-        .toMap
-      (node -> (pairs ++ obvConnections))
-    })
-    .toMap
-
-
-  Network.routingTable = routingTable
-
+          .groupMap(_._1)(_._2)
+      })
+      .toMap
+  }
+  
+  Network.routingTable = createRoutingTable
 
   def tick(tick: Long, time: Int): Unit = {
 
@@ -73,5 +62,5 @@ class Network (nodes: List[Node], connections: List[Connection]) {
 }
 
 object Network {
-  var routingTable: Map[Node, Map[Node, Node]] = Map.empty
+  var routingTable: Map[Node, Map[Node, Seq[Node]]] = Map.empty
 }

@@ -32,7 +32,7 @@ class ATSSource(
 
   def getAvailableFrame(time: Long, tick: Long, node: Node): Option[Packet] = {
     if (time == nextCreation && time < end) {
-      val nextHops = target.map(t => Network.routingTable(node)(t))
+      val nextHops = target.flatMap(t => Network.routingTable(node)(t))
       if (delta_min.equals(delta_max)) {
         nextCreation = nextCreation + delta_min
       } else {

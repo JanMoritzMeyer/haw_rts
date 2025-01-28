@@ -9,39 +9,24 @@ import matchers._
 
 class NetworkTest extends AnyFlatSpec with should.Matchers {
 
-  "Network" should "get routes" in {
-      val node1 = Host("ho1", ClassicQueue(Map.empty))
-      val node2 = Host("ho2", ClassicQueue(Map.empty))
-      val switch1 = Switch("s1")
+  "Network" should "get two routes if available" in {
+    val ho1 = Host("ho1", ClassicQueue(Map.empty))
+    val ho2 = Host("ho2", ClassicQueue(Map.empty))
+    val ho3 = Host("ho3", ClassicQueue(Map.empty))
+    val s1 = Switch("s1")
+    val s2 = Switch("s2")
 
-      val connection = Connection(node1, 0, switch1, 0, 100)
-      val connection2 = Connection(node2, 0, switch1, 0, 100)
+    val c1 = Connection(ho1, 0, s1, 0, 100)
+    val c2 = Connection(ho1, 1, s2, 0, 100)
+    val c3 = Connection(s1, 1, ho2, 0, 100)
+    val c4 = Connection(s1, 2, ho3, 0, 100)
+    val c5 = Connection(s2, 1, ho2, 1, 100)
 
-      val network = Network(List(node1, node2, switch1), List(connection, connection2))
+    val network = Network(List(ho1, ho2, ho3, s1, s2), List(c1, c2, c3, c4, c5))
 
-      val routes = network.getConnectionsFor(node1)
-
-      val routessw1 = network.getConnectionsFor(switch1)
-
-      routes shouldBe List(switch1, node2)
-      routessw1 shouldBe List(node1, node2)
-    }
-
-  "Network" should "build correct Routing Table" in {
-    val node1 = Host("ho1", ClassicQueue(Map(0 -> CBS(100, 100))))
-    val node2 = Host("ho2", ClassicQueue(Map.empty))
-    val switch1 = Switch("s1")
-
-    val connection = Connection(node1, 0, switch1, 0, 100)
-    val connection2 = Connection(node2, 0, switch1, 0, 100)
-
-    val network = Network(List(node1, node2, switch1), List(connection, connection2))
-
-    Network.routingTable.get(node1) shouldBe Option(Map(
-      node2 -> switch1,
-      switch1 -> switch1
-    ))
-
+    network.createRoutingTable(ho1)(ho2) should be(List(s1, s2))
+    network.createRoutingTable(ho1)(s1) should be(List(s1))
+    network.createRoutingTable(ho1)(ho3) should be(List(s1))
   }
 
 

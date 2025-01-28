@@ -16,11 +16,11 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: D
   
   def removePackage(packet: Packet): Any = {
     Logging.writePackageLog(packet.nextHop, packet)
-    val nextHops = packet.target.filter(packet.nextHop != _).map(t => Network.routingTable(packet.nextHop)(t))
+    val nextHops = packet.target.filter(packet.nextHop != _).flatMap(t => Network.routingTable(packet.nextHop)(t))
     val sameNextHop = nextHops.forall(_ == nextHops.head)
     if (sameNextHop) {
       if (packet.nextHop != packet.target.head) {
-        val nextHop = Network.routingTable(packet.nextHop)(packet.target.head)
+        val nextHop = Network.routingTable(packet.nextHop)(packet.target.head).head
         packet.nextHop.addToQueue(Packet(packet.size, nextHop, packet.target, packet.pcp, packet.stream, packet.uid))
       }
       else {
@@ -28,9 +28,8 @@ case class Connection(lnode: Node, lport: Int, rnode: Node, rport: Int, speed: D
       queue.removePacket(packet)
     }
     else {
-      packet.target.foreach(target => {
-        val nextHop = Network.routingTable(packet.nextHop)(target)
-        packet.nextHop.addToQueue(Packet(packet.size, nextHop, List(target), packet.pcp, packet.stream, packet.uid))
+      nextHops.foreach(nextHop => {
+        packet.nextHop.addToQueue(Packet(packet.size, nextHop, packet.target, packet.pcp, packet.stream, packet.uid))
         queue.removePacket(packet)
       })
     }
