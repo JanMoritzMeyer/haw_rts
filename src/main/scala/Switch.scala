@@ -1,15 +1,15 @@
-import control.OpenGate
+import control.Gate
 
-case class Switch(name: String) extends Node {
+case class Switch(name: String, gates: Map[Int, Gate] = Map.empty) extends Node {
 
-  val queue = new Queue(Map.empty)
+  val queue = new Queue(gates)
 
   var sending = false
   
   override def getQueue: Queue = queue
 
   override def tick(tick: Long, time: Long, availabilites: (Node, Node) => Option[Connection]): Unit = {
-    queue.getQueue.foreach(p => {
+    queue.getQueue(time).foreach(p => {
       availabilites(this, p.nextHop) match
         case Some(connection) => {
           queue.removePacket(p)

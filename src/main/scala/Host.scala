@@ -14,7 +14,7 @@ case class Host(name: String, queue: Queue) extends Node {
   override def getQueue: Queue = queue
 
   override def tick(tick: Long, time: Long, isAvailable: (lnode: Node, rnode: Node) => Option[Connection]): Unit = {
-    val packets = queue.getQueue
+    val packets = queue.getQueue(time)
     if (queue.isEmpty && !sending) {
       queue.notSending(tick)
     }

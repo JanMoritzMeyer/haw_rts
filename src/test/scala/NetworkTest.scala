@@ -10,8 +10,8 @@ import matchers._
 class NetworkTest extends AnyFlatSpec with should.Matchers {
 
   "Network" should "get routes" in {
-      val node1 = Host("ho1", Queue(CBS(100, 100)))
-      val node2 = Host("ho2", Queue(CBS(100, 100)))
+      val node1 = Host("ho1", Queue(Map.empty))
+      val node2 = Host("ho2", Queue(Map.empty))
       val switch1 = Switch("s1")
 
       val connection = Connection(node1, 0, switch1, 0, 100)
@@ -28,8 +28,8 @@ class NetworkTest extends AnyFlatSpec with should.Matchers {
     }
 
   "Network" should "build correct Routing Table" in {
-    val node1 = Host("ho1", Queue(CBS(100, 100)))
-    val node2 = Host("ho2", Queue(CBS(100, 100)))
+    val node1 = Host("ho1", Queue(Map(0 -> CBS(100, 100))))
+    val node2 = Host("ho2", Queue(Map.empty))
     val switch1 = Switch("s1")
 
     val connection = Connection(node1, 0, switch1, 0, 100)

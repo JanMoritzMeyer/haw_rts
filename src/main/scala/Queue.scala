@@ -14,7 +14,7 @@ class Queue (prioritizer: Map[Int, Gate]) {
   
   def isEmpty: Boolean = queue.isEmpty
   
-  def getQueue: List[Packet] = {
+  def getQueue(time: Double): List[Packet] = {
     val availablePrios = queue
       .groupBy(_.pcp).keys
       .toList
@@ -26,7 +26,7 @@ class Queue (prioritizer: Map[Int, Gate]) {
         }
       })
     queue
-      .filter(x => canSend(x.pcp))
+      .filter(x => canSend(x.pcp, time))
       .sortBy(_.pcp)
   }
   
@@ -37,6 +37,6 @@ class Queue (prioritizer: Map[Int, Gate]) {
 
   def notSending(ns: Double): Unit = prioritizer.foreach(_._2.notSending(ns))
 
-  def canSend(pcp: Int): Boolean = prioritizer.get(pcp).forall(_.canSend)
+  def canSend(pcp: Int, time: Double): Boolean = prioritizer.get(pcp).forall(_.canSend(time))
 
 }
