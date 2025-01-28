@@ -36,7 +36,7 @@ case class Host(name: String, queue: Queue) extends Node {
   }
 
   def prepareTick(tick: Long, time: Long): Unit = {
-    trafficSources.foreach(_.getAvailableFrame(time, this).foreach(p => {
+    trafficSources.foreach(_.getAvailableFrame(time, tick, this).foreach(p => {
       queue.addPacket(p)
     }))
   }

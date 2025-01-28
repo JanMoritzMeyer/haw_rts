@@ -6,7 +6,7 @@ case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_ma
 
   private var nextSend: Double = start
 
-  def getAvailableFrame(time: Long, node: Node): Option[Packet] = {
+  def getAvailableFrame(time: Long, tick: Long, node: Node): Option[Packet] = {
     if (time > end) {
       return None
     }

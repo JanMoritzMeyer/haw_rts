@@ -1,3 +1,3 @@
 trait Source {
-  def getAvailableFrame(time: Long, node: Node): Option[Packet]
+  def getAvailableFrame(time: Long, tick: Long, node: Node): Option[Packet]
 }
