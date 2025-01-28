@@ -1,13 +1,11 @@
-import control.Gate
-
 case class Host(name: String, queue: Queue) extends Node {
 
   
-  var trafficSources: List[TrafficSource] = List.empty
+  var trafficSources: List[Source] = List.empty
 
   var sending = false
   
-  def addTrafficSource(trafficSource: TrafficSource): Unit = {
+  def addTrafficSource(trafficSource: Source): Unit = {
     this.trafficSources = this.trafficSources :+ trafficSource
   }
   

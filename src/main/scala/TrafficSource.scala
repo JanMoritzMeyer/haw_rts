@@ -2,9 +2,9 @@ import UID.getUnique
 
 import scala.util.Random
 
-case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_max: Double, frame: Frame, target: List[Node]) {
+case class TrafficSource(start: Double, end: Double, delta_min: Double, delta_max: Double, frame: Frame, target: List[Node]) extends Source {
 
-  var nextSend: Double = start
+  private var nextSend: Double = start
 
   def getAvailableFrame(time: Long, node: Node): Option[Packet] = {
     if (time > end) {
