@@ -17,7 +17,7 @@ import scala.language.postfixOps
     val sw1 = Switch("sw1", Map.empty)
     val sw2 = Switch("sw2", Map.empty)
     val sw3 = Switch("sw3", Map.empty)
-    val sw4 = Switch("sw4", Map.empty)
+    val sw4 = Switch("sw4", Map.empty, true)
 
     val connection = Connection(ho1, 0, sw0, 0, Converter.mbits_to_bytens(100))
     val connection1 = Connection(sw0, 1, sw1, 0, Converter.mbits_to_bytens(100))
@@ -28,9 +28,9 @@ import scala.language.postfixOps
     val connection6 = Connection(sw3, 1, sw4, 3, Converter.mbits_to_bytens(100))
     val connection7 = Connection(sw4, 1, ho2, 0, Converter.mbits_to_bytens(100))
 
-    ho1.addTrafficSource(ATSSource(Converter.ms_to_ns(5), Converter.ms_to_ns(1_000), Converter.ms_to_ns(10), Converter.ms_to_ns(10), s1, List(ho2), Converter.mbits_to_bytens(80), 800, Converter.ms_to_ns(200)))
+    ho1.addTrafficSource(TrafficSource(Converter.ms_to_ns(5), Converter.ms_to_ns(1_000), Converter.ms_to_ns(1_000), Converter.ms_to_ns(1_000), s1, List(ho2)))
 
-    val network = Network(List(ho1, ho2, sw1, sw2, sw3, sw4), List(connection,
+    val network = Network(List(ho1, ho2, sw0, sw1, sw2, sw3, sw4), List(connection,
       connection1,
       connection2,
       connection3,

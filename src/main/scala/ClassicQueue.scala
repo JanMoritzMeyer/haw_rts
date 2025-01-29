@@ -9,14 +9,15 @@ class ClassicQueue (prioritizer: Map[Int, Gate]) extends Queue {
   }
 
   def removePacket(packet: Packet): Unit = {
-    queue = queue.filter(_ != packet)
+    queue = queue.filterNot(_ == packet)
   }
 
   def isEmpty: Boolean = queue.isEmpty
 
   def getQueue(time: Double): List[Packet] = {
     val availablePrios = queue
-      .groupBy(_.pcp).keys
+      .groupBy(_.pcp)
+      .keys
       .toList
     prioritizer
       .foreach(x => {
